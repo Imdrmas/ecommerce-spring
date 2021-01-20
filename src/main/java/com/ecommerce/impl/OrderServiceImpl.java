@@ -1,41 +1,38 @@
 package com.ecommerce.impl;
 
-import java.time.LocalDate;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ecommerce.dao.OrderDao;
 import com.ecommerce.modal.Order;
 import com.ecommerce.service.OrderService;
 
+@Service
 @Transactional
-@Component
 public class OrderServiceImpl implements OrderService {
 	
-	@Autowired
 	private OrderDao orderDao;
-	
-    @Override
-    public Iterable<Order> getAllOrders() {
-        return this.orderDao.findAll();
-    }
-
-    @Override
-    public Order createOrder(Order order) {
-        order.setDateCreated(LocalDate.now());
-        return this.orderDao.save(order);
-    }
-
-    @Override
-    public void updateOrder(Order order) {
-        this.orderDao.save(order);
-    }
+	public OrderServiceImpl(OrderDao orderDao) {
+		this.orderDao = orderDao;
+	}
 
 	@Override
-	public void deleteOrder(long id) {
-		orderDao.deleteById(id);
+	public @NotNull Iterable<Order> getAllOrders() {
+		return this.orderDao.findAll();
+	}
+
+	@Override
+	public Order create(@NotNull(message = "The order cannot be null.") @Valid Order order) {
+		return this.orderDao.save(order);
+	}
+
+	@Override
+	public void update(@NotNull(message = "The order cannot be null.") @Valid Order order) {
+		this.orderDao.save(order);
+		
 	}
 
 }

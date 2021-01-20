@@ -2,6 +2,7 @@ package com.ecommerce.service;
 
 import java.util.List;
 
+import com.ecommerce.modal.Product;
 import com.ecommerce.modal.Tag;
 
 public interface TagService {
@@ -20,5 +21,7 @@ public interface TagService {
 
 	
 	 Tag findTagById(long id);
+	 
+	 List<Product> findProductsForTag(long idTag);
 
 }

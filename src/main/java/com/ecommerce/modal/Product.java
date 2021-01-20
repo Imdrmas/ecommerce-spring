@@ -2,14 +2,7 @@ package com.ecommerce.modal;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,124 +11,126 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 @Entity
 @Table(name = "products")
 public class Product {
-	
-	 @Id
-	 @GeneratedValue(strategy = GenerationType.IDENTITY)
-	 private Long id;
-	 
-	 private String name;
-	 
-		private String description;
-		
-		private Double price;
-		
-		private String pictureUrl;
-		
-		@JsonBackReference(value = "category")
-		@ManyToOne
-		private Category category;
-		
-		@JsonProperty(access = Access.WRITE_ONLY)
-		@OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
-		private List<Tag> tags;
-		
-		@JsonProperty(access = Access.WRITE_ONLY)
-		@OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
-		private List<Comment> comments;
 
-		public Product() {
-			super();
-		}
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-		public Product(String name, String description, Double price, String pictureUrl, Category category,
-				List<Tag> tags, List<Comment> comments) {
-			super();
-			this.name = name;
-			this.description = description;
-			this.price = price;
-			this.pictureUrl = pictureUrl;
-			this.category = category;
-			this.tags = tags;
-			this.comments = comments;
-		}
+	private String name;
 
-		public Long getId() {
-			return id;
-		}
+	private String description;
 
-		public void setId(Long id) {
-			this.id = id;
-		}
+	private Double price;
 
-		public String getName() {
-			return name;
-		}
+	private String pictureUrl;
 
-		public void setName(String name) {
-			this.name = name;
-		}
+	@JsonBackReference(value = "category")
+	@ManyToOne
+	private Category category;
 
-		public String getDescription() {
-			return description;
-		}
+	@JsonProperty(access = Access.WRITE_ONLY)
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "tag_products", joinColumns = @JoinColumn(name = "tag_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
+	private List<Tag> tags;
 
-		public void setDescription(String description) {
-			this.description = description;
-		}
+	@JsonProperty(access = Access.WRITE_ONLY)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+	private List<Comment> comments;
 
-		public Double getPrice() {
-			return price;
-		}
+	public Product() {
+		super();
+	}
 
-		public void setPrice(Double price) {
-			this.price = price;
-		}
+	public Product(String name, String description, Double price, String pictureUrl, Category category, List<Tag> tags,
+			List<Comment> comments) {
+		super();
+		this.name = name;
+		this.description = description;
+		this.price = price;
+		this.pictureUrl = pictureUrl;
+		this.category = category;
+		this.tags = tags;
+		this.comments = comments;
+	}
 
-		public String getPictureUrl() {
-			return pictureUrl;
-		}
+	public Long getId() {
+		return id;
+	}
 
-		public void setPictureUrl(String pictureUrl) {
-			this.pictureUrl = pictureUrl;
-		}
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-		public Category getCategory() {
-			return category;
-		}
+	public String getName() {
+		return name;
+	}
 
-		public void setCategory(Category category) {
-			this.category = category;
-		}		
-        
-		public List<Tag> getTags() {
-			return tags;
-		}
+	public void setName(String name) {
+		this.name = name;
+	}
 
-		public void setTags(List<Tag> tags) {
-			this.tags = tags;
-		}
+	public String getDescription() {
+		return description;
+	}
 
-		public List<Comment> getComments() {
-			return comments;
-		}
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-		public void setComments(List<Comment> comments) {
-			this.comments = comments;
-		}
-		
-		public void addCommentToProduct(Comment comment) {
-			if(getComments()==null) {
-				this.comments = new ArrayList<>();
-			}
-			getComments().add(comment);
-			comment.setProduct(this);
-		}
+	public Double getPrice() {
+		return price;
+	}
 
-		public void addTag(Tag tag) {
-			if (getTags()==null) {
-				this.tags = new ArrayList<>();
-			}
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+
+	public String getPictureUrl() {
+		return pictureUrl;
+	}
+
+	public void setPictureUrl(String pictureUrl) {
+		this.pictureUrl = pictureUrl;
+	}
+
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
+	public List<Tag> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<Tag> tags) {
+		this.tags = tags;
+	}
+
+	public List<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+
+	public void addCommentToProduct(Comment comment) {
+		if (getComments() == null) {
+			this.comments = new ArrayList<>();
+		}
+		getComments().add(comment);
+		comment.setProduct(this);
+	}
+
+	public void addTag(Tag tag) {
+		if (getTags() == null) {
+			this.tags = new ArrayList<>();
+		}
+		if (!getTags().contains(tag)) {
 			getTags().add(tag);
-			tag.setProduct(this);
 		}
+	}
 }

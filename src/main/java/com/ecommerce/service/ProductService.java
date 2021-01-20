@@ -18,6 +18,6 @@ public interface ProductService {
 	List<Product> findProductsForCategory(long idCategory);
 	
 
-	
+	Product getProduct(Long id);
 
 }

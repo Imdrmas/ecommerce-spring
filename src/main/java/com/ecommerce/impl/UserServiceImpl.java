@@ -24,6 +24,7 @@ public class UserServiceImpl implements UserService {
 		if (users.size() == 0) {
 			user.setAdmin(true);
 		}
+		
 		for (User userExist : users) {
 			if (user.getUsername().equals(userExist.getUsername())) {
 				userExist.setUsername(userExist.getUsername());
@@ -31,6 +32,7 @@ public class UserServiceImpl implements UserService {
 				return userDao.save(userExist);
 			}
 		}
+	
 		return userDao.save(user);	
 	}
 
@@ -48,11 +50,8 @@ public class UserServiceImpl implements UserService {
 		existUser.setEmail(user.getEmail());
 		existUser.setNameOnCard(user.getNameOnCard());
 		existUser.setCardNumber(user.getCardNumber());
-		existUser.setExpMonth(user.getExpMonth());
 		existUser.setCvv(user.getCvv());
-		existUser.setExpYear(user.getExpYear());
 		existUser.setAddress(user.getAddress());
-		existUser.setActive(user.isActive());
 		return userDao.save(existUser);
 	}
 
@@ -64,7 +63,9 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void deleteUser(long id) {
 		userDao.deleteById(id);
-	} @Override
+	} 
+	
+	@Override
 	 public User findByUsername(String username) {
 		   Optional<User> users = userDao.findByUsername(username);
 		    if (users.isPresent()) {

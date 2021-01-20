@@ -3,14 +3,7 @@ package com.ecommerce.modal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
@@ -35,27 +28,25 @@ public class User {
 	 private String nameOnCard;
 
 	 private String cardNumber;
-
-	 private String expMonth;
 	    
 	 private int cvv;
 
-	 private String expYear;
-
 	 private String address;
-	 
-	 private boolean active;
 	 
 	 @JsonProperty(access = Access.AUTO)
 	 @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
 	 private List<Category> categories;
+	 
+	 @JsonProperty(access = Access.AUTO)
+	 @OneToMany(cascade = CascadeType.MERGE, mappedBy = "user")
+	 private List<Cart> carts;
 
 	public User() {
 		super();
 	}
 
-	public User(String username, String password, boolean admin, String email, String nameOnCard, String cardNumber,
-			String expMonth, int cvv, String expYear, String address, boolean active, List<Category> categories) {
+	public User(String username, String password, boolean admin, String email, String nameOnCard,
+			String cardNumber, int cvv, String address, List<Category> categories, List<Cart> carts) {
 		super();
 		this.username = username;
 		this.password = password;
@@ -63,12 +54,10 @@ public class User {
 		this.email = email;
 		this.nameOnCard = nameOnCard;
 		this.cardNumber = cardNumber;
-		this.expMonth = expMonth;
 		this.cvv = cvv;
-		this.expYear = expYear;
 		this.address = address;
-		this.active = active;
 		this.categories = categories;
+		this.carts = carts;
 	}
 
 	public Long getId() {
@@ -127,14 +116,6 @@ public class User {
 		this.cardNumber = cardNumber;
 	}
 
-	public String getExpMonth() {
-		return expMonth;
-	}
-
-	public void setExpMonth(String expMonth) {
-		this.expMonth = expMonth;
-	}
-
 	public int getCvv() {
 		return cvv;
 	}
@@ -143,13 +124,6 @@ public class User {
 		this.cvv = cvv;
 	}
 
-	public String getExpYear() {
-		return expYear;
-	}
-
-	public void setExpYear(String expYear) {
-		this.expYear = expYear;
-	}
 
 	public String getAddress() {
 		return address;
@@ -157,14 +131,6 @@ public class User {
 
 	public void setAddress(String address) {
 		this.address = address;
-	}
-
-	public boolean isActive() {
-		return active;
-	}
-
-	public void setActive(boolean active) {
-		this.active = active;
 	}
 
 	public List<Category> getCategories() {
@@ -175,6 +141,15 @@ public class User {
 		this.categories = categories;
 	}
 	
+	
+	public List<Cart> getCarts() {
+		return carts;
+	}
+
+	public void setCarts(List<Cart> carts) {
+		this.carts = carts;
+	}
+
 	public void addCategoryToUser(Category category) {
 		if (getCategories()==null) {
 			this.categories = new ArrayList<>();
@@ -182,6 +157,18 @@ public class User {
 		getCategories().add(category);
 		category.setUser(this);
 	}
-
+   
+	public void addCartToUser(Cart cart) {
+		if(getCarts()==null) {
+			this.carts = new ArrayList<>();	
+		}
+		getCarts().add(cart);
+		cart.setUser(this);
+	}
+	public void removeFromCart(Cart cart) {
+		if (getCarts()!=null) {
+			getCarts().remove(cart);
+		}
+	}
 	 
 }

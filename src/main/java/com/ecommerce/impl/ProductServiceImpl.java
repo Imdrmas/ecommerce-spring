@@ -8,10 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ecommerce.dao.CategoryDao;
 import com.ecommerce.dao.ProductDao;
-import com.ecommerce.dao.TagDao;
 import com.ecommerce.modal.Category;
 import com.ecommerce.modal.Product;
-import com.ecommerce.modal.Tag;
 import com.ecommerce.service.ProductService;
 
 @Transactional
@@ -24,8 +22,6 @@ public class ProductServiceImpl implements ProductService {
 	@Autowired
 	private CategoryDao categoryDao;
 
-	@Autowired
-	private TagDao tagDao;
 
 	@Override
 	public Product addProductToCategory(Product product, long idCategory) {
@@ -67,6 +63,9 @@ public class ProductServiceImpl implements ProductService {
 		return category.getProducts();
 	}
 
-
+	@Override
+	public Product getProduct(Long id) {
+		return productDao.findById(id).orElse(null);
+	}
 
 }

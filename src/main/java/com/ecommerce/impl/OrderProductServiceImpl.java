@@ -1,5 +1,8 @@
 package com.ecommerce.impl;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,8 +19,9 @@ public class OrderProductServiceImpl implements OrderProductService {
 	private OrderProductDao orderProductDao;
 
 	@Override
-	public OrderProduct addOrderProduct(OrderProduct orderProduct) {
-		  return this.orderProductDao.save(orderProduct);
+	public OrderProduct create(
+			@NotNull(message = "The products for order cannot be null.") @Valid OrderProduct orderProduct) {
+		return this.orderProductDao.save(orderProduct);
 	}
 
 }
